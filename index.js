@@ -1,38 +1,43 @@
-// Import express
-let express = require('express');
-// Import Body parser
-let bodyParser = require('body-parser');
-// Import Mongoose
-let mongoose = require('mongoose');
-// Initialise the app
-let app = express();
+// Loads the configuration from config.env to process.env
+require('dotenv').config({ path: './config.env' });
 
-// Import routes
-let apiRoutes = require("./api-routes");
-// Configure bodyparser to handle post requests
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-app.use(bodyParser.json());
-// Connect to Mongoose and set connection variable
-mongoose.connect('mongodb://localhost/warehouse', { useNewUrlParser: true});
-var db = mongoose.connection;
+const express = require('express');
+const cors = require('cors');
+// get MongoDB driver connection
+const dbo = require('./db/conn');
 
-// Added check for DB connection
-if(!db)
-    console.log("Error connecting db")
-else
-    console.log("Db connected successfully")
+const PORT = process.env.PORT || 5000;
+const app = express();
 
-// Setup server port
-var port = process.env.PORT || 3030;
+app.use(cors());
+app.use(express.json());
+app.use(require('./routes/record'));
 
-// Send message for default URL
-app.get('/', (req, res) => res.send('Hello World with Express'));
+// Global error handling
+app.use(function (err, _req, res) {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 
-// Use Api routes in the App
-app.use('/api', apiRoutes);
-// Launch app to listen to specified port
-app.listen(port, function () {
-    console.log("Running RestHub on port " + port);
+// perform a database connection when the server starts
+dbo.connectToServer(function (err) {
+    if (err) {
+        console.error(err);
+        process.exit();
+    }
+
+    // start the Express server
+
+});
+dbo.connectToServer1(function (err) {
+    if (err) {
+        console.error(err);
+        process.exit();
+    }
+
+    // start the Express server
+
+});
+app.listen(PORT, () => {
+    console.log(`Server is running on port: ${PORT}`);
 });
