@@ -1,5 +1,5 @@
 const { MongoClient } = require('mongodb');
-const connectionString = process.env.ATLAS_URI_WH;
+const connectionString = process.env.ATLAS_URI_animeka;
 const connectionString1 = process.env.ATLAS_URI_KRS;
 const client = new MongoClient(connectionString, {
     useNewUrlParser: true,
@@ -19,7 +19,7 @@ module.exports = {
             }
 
             dbConnection = db.db('warehouse');
-            console.log('Successfully connected to MongoDB.');
+            console.log('Successfully connected to aniinfo MongoDB.');
 
             return callback();
         });
